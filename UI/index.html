@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Management System - Welcome</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.15)"/><circle cx="40" cy="60" r="1" fill="rgba(255,255,255,0.2)"/><circle cx="90" cy="80" r="2.5" fill="rgba(255,255,255,0.1)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .welcome-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 380px;
+            max-height: 90vh;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            animation: slideIn 0.8s ease-out;
+            overflow-y: auto;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 1.6em;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .time-greeting {
+            font-size: 1em;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-weight: 600;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .user-welcome {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            animation: fadeIn 1s ease-out 0.5s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .user-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-5px); }
+            60% { transform: translateY(-2px); }
+        }
+
+        .welcome-name {
+            color: #d63384;
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .user-type-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .welcome-message {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .redirect-info {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            animation: fadeIn 1s ease-out 1s both;
+        }
+
+        .redirect-info h3 {
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        .redirect-info p {
+            color: #666;
+            font-size: 0.8em;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .countdown {
+            font-size: 1.2em;
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 10px;
+            animation: countdown 1s ease-in-out infinite;
+        }
+
+        @keyframes countdown {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .loading-bar {
+            width: 100%;
+            height: 3px;
+            background: #e1e5e9;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .loading-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+            animation: loading 5s linear forwards;
+        }
+
+        @keyframes loading {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        .dashboard-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .dashboard-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dashboard-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            padding: 8px 16px;
+            font-size: 0.8em;
+        }
+
+        .logout-btn:hover {
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .welcome-container {
+                width: 95%;
+                max-width: 350px;
+                padding: 18px;
+            }
+
+            .header h1 {
+                font-size: 1.4em;
+            }
+
+            .welcome-name {
+                font-size: 1.2em;
+            }
+
+            .dashboard-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .dashboard-btn {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .welcome-container {
+                padding: 15px;
+                max-height: 95vh;
+            }
+
+            .header h1 {
+                font-size: 1.3em;
+            }
+
+            .user-icon {
+                font-size: 2em;
+            }
+
+            .welcome-name {
+                font-size: 1.1em;
+            }
+
+            .user-welcome {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+
+            .redirect-info {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="welcome-container">
+    <div class="header">
+        <h1>🏨 Hotel Management System</h1>
+    </div>
+
+    <div class="time-greeting" id="timeGreeting"></div>
+
+    <div class="user-welcome">
+        <div class="user-icon" id="userIcon"></div>
+        <div class="welcome-name" id="welcomeName"></div>
+        <div class="user-type-badge" id="userTypeBadge"></div>
+        <div class="welcome-message" id="welcomeMessage"></div>
+    </div>
+
+    <div class="redirect-info">
+        <h3>🚀 Redirecting to Dashboard</h3>
+        <p id="redirectMessage"></p>
+
+        <div class="countdown" id="countdown">5</div>
+
+        <div class="loading-bar">
+            <div class="loading-fill"></div>
+        </div>
+
+        <div class="dashboard-buttons">
+            <button class="dashboard-btn" id="dashboardBtn">
+                <span>📊</span>
+                <span id="dashboardBtnText">Go to Dashboard</span>
+            </button>
+            <button class="dashboard-btn logout-btn" onclick="logout()">
+                <span>🚪</span>
+                <span>Logout</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Simulate getting user data from session/localStorage
+    // In real application, this would come from server session or API
+    function getCurrentUser() {
+        // This simulates different user scenarios
+        const users = {
+            customer: {
+                name: 'John Doe',
+                type: 'customer',
+                email: 'john@example.com'
+            },
+            hotel_owner: {
+                name: 'Paradise Resort',
+                type: 'hotel_owner',
+                email: 'paradise@hotel.com'
+            }
+        };
+
+        // For demo, randomly select a user or get from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const userType = urlParams.get('user') || 'customer';
+        return users[userType] || users.customer;
+    }
+
+    // Get current time greeting
+    function getTimeGreeting() {
+        const now = new Date();
+        const hour = now.getHours();
+
+        if (hour < 12) {
+            return '🌅 Good Morning!';
+        } else if (hour < 17) {
+            return '☀️ Good Afternoon!';
+        } else {
+            return '🌙 Good Evening!';
+        }
+    }
+
+    // Initialize the welcome page
+    function initWelcomePage() {
+        const user = getCurrentUser();
+
+        // Set time greeting
+        document.getElementById('timeGreeting').textContent = getTimeGreeting();
+
+        // Set user-specific content
+        if (user.type === 'customer') {
+            document.getElementById('userIcon').textContent = '👤';
+            document.getElementById('welcomeName').textContent = `Welcome, ${user.name}!`;
+            document.getElementById('userTypeBadge').textContent = 'Hotel Customer';
+            document.getElementById('welcomeMessage').textContent = 'Ready to explore amazing hotels and book your perfect stay?';
+            document.getElementById('redirectMessage').textContent = 'Taking you to your customer dashboard where you can browse hotels, make bookings, and manage your reservations.';
+            document.getElementById('dashboardBtnText').textContent = 'Go to Customer Dashboard';
+        } else {
+            document.getElementById('userIcon').textContent = '🏨';
+            document.getElementById('welcomeName').textContent = `Welcome, ${user.name}!`;
+            document.getElementById('userTypeBadge').textContent = 'Hotel Owner';
+            document.getElementById('welcomeMessage').textContent = 'Ready to manage your property and serve your guests?';
+            document.getElementById('redirectMessage').textContent = 'Taking you to your hotel management dashboard where you can update rooms, manage bookings, and view analytics.';
+            document.getElementById('dashboardBtnText').textContent = 'Go to Hotel Dashboard';
+        }
+
+        // Start countdown
+        startCountdown(user.type);
+    }
+
+    // Countdown timer
+    function startCountdown(userType) {
+        let count = 5;
+        const countdownElement = document.getElementById('countdown');
+        const dashboardBtn = document.getElementById('dashboardBtn');
+
+        const timer = setInterval(() => {
+            count--;
+            countdownElement.textContent = count;
+
+            if (count <= 0) {
+                clearInterval(timer);
+                redirectToDashboard(userType);
+            }
+        }, 1000);
+
+        // Manual redirect button
+        dashboardBtn.onclick = () => {
+            clearInterval(timer);
+            redirectToDashboard(userType);
+        };
+    }
+
+    // Redirect to appropriate dashboard
+    function redirectToDashboard(userType) {
+        if (userType === 'customer') {
+            // Redirect to hotelCustomer.html
+            window.location.href = 'hotelCustomer.html';
+        } else {
+            // Redirect to hotel owner dashboard
+            window.location.href = 'hotel-dashboard.html';
+        }
+    }
+
+    // Logout function
+    function logout() {
+        if (confirm('Are you sure you want to logout?')) {
+            // Clear session data
+            // In real app: clear session, localStorage, etc.
+
+            // Redirect to login
+            window.location.href = 'signin.html';
+        }
+    }
+
+    // Initialize page when loaded
+    document.addEventListener('DOMContentLoaded', initWelcomePage);
+
+    // Demo info
+    setTimeout(() => {
+        const demoInfo = document.createElement('div');
+        demoInfo.style.cssText = `
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                background: rgba(0,0,0,0.8);
+                color: white;
+                padding: 10px;
+                border-radius: 8px;
+                font-size: 10px;
+                z-index: 1000;
+                max-width: 200px;
+            `;
+        demoInfo.innerHTML = `
+                <strong>Demo URLs:</strong><br>
+                Customer: ?user=customer<br>
+                Hotel Owner: ?user=hotel_owner
+            `;
+        document.body.appendChild(demoInfo);
+
+        setTimeout(() => {
+            demoInfo.style.display = 'none';
+        }, 6000);
+    }, 1000);
+</script>
+</body>
+</html>

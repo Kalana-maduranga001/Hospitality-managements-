@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Management - Sign Up</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            background: linear-gradient(135deg, #040e39 0%, #0d1a77 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated Background */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .background::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+            33% { transform: translate(-50%, -50%) rotate(120deg); }
+            66% { transform: translate(-50%, -50%) rotate(240deg); }
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            animation: particleFloat 15s linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Main Container */
+        .container {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .signup-container {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 1000px;
+            height: 95vh;
+            overflow: hidden;
+            position: relative;
+            animation: slideUp 0.8s ease-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #040e39 0%, #0d1a77 100%);
+            color: white;
+            padding: 20px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.1; }
+        }
+
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
+            animation: fadeInDown 1s ease-out 0.3s both;
+        }
+
+        .header .subtitle {
+            font-size: 1em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        @keyframes fadeInDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Tab System */
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            flex-shrink: 0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            color: #6c757d;
+        }
+
+        .tab.active {
+            color: #0d1a77;
+            background: white;
+        }
+
+        .tab::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #0d1a77;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .tab.active::after {
+            transform: scaleX(1);
+        }
+
+        .tab:hover {
+            color: #0d1a77;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        /* Form Container */
+        .form-container {
+            padding: 20px 30px;
+            position: relative;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .form-content {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+            height: 100%;
+        }
+
+        .form-content.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            background: white;
+            position: relative;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0d1a77;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Floating Labels */
+        .floating-label {
+            position: relative;
+        }
+
+        .floating-label input {
+            padding-top: 20px;
+            padding-bottom: 8px;
+        }
+
+        .floating-label label {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            background: white;
+            padding: 0 5px;
+            margin: 0;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: normal;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .floating-label input:focus + label,
+        .floating-label input:valid + label {
+            top: 0;
+            font-size: 0.8em;
+            color: #0d1a77;
+            font-weight: 600;
+        }
+
+        /* Animated Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #040e39 0%, #0d1a77 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.6s ease;
+        }
+
+        .submit-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Success Message */
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #c3e6cb;
+            display: none;
+            animation: slideDown 0.5s ease-out;
+            font-size: 0.9em;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .form-container {
+                padding: 15px 20px;
+            }
+
+            .tab {
+                font-size: 0.9em;
+                padding: 10px;
+            }
+
+            .signup-container {
+                height: 98vh;
+            }
+        }
+
+        /* Custom Checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .custom-checkbox {
+            position: relative;
+            display: inline-block;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .custom-checkbox input[type="checkbox"] {
+            opacity: 0;
+            position: absolute;
+            width: 0;
+            height: 0;
+        }
+
+        .checkmark {
+            width: 24px;
+            height: 24px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checkmark::after {
+            content: '';
+            position: absolute;
+            display: none;
+            width: 8px;
+            height: 12px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+        }
+
+        .custom-checkbox input:checked + .checkmark {
+            background: #0d1a77;
+            border-color: #0d1a77;
+            transform: scale(1.1);
+        }
+
+        .custom-checkbox input:checked + .checkmark::after {
+            display: block;
+        }
+
+        .custom-checkbox:hover .checkmark {
+            border-color: #0d1a77;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: normal;
+            cursor: pointer;
+            font-size: 0.9em;
+            line-height: 1.4;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+<div class="background"></div>
+<div class="particles" id="particles"></div>
+
+<div class="container">
+    <div class="signup-container">
+        <div class="header">
+            <h1>🏨 Join Our Platform</h1>
+            <div class="subtitle">Start your journey with us today</div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('hotel-owner')">
+                🏨 Hotel Owner
+            </button>
+            <button class="tab" onclick="switchTab('user')">
+                👤 Guest User
+            </button>
+        </div>
+
+        <div class="form-container">
+            <!-- Hotel Owner Form -->
+            <div id="hotel-owner" class="form-content active">
+                <div class="success-message" id="hotel-success">
+                    ✅ Registration successful! Check your email for verification.
+                </div>
+
+                <form id="hotel-form">
+                    <div class="form-row">
+                        <div class="form-group floating-label">
+                            <input type="text" id="hotel-name" required>
+                            <label for="hotel-name">Hotel Name</label>
+                        </div>
+                        <div class="form-group floating-label">
+                            <input type="email" id="hotel-email" required>
+                            <label for="hotel-email">Email Address</label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group floating-label">
+                            <input type="password" id="hotel-password" required>
+                            <label for="hotel-password">Password</label>
+                        </div>
+                        <div class="form-group floating-label">
+                            <input type="password" id="hotel-confirm-password" required>
+                            <label for="hotel-confirm-password">Confirm Password</label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="hotel-district">District</label>
+                            <select id="hotel-district" required>
+                                <option value="">Select District</option>
+                                <option value="colombo">Colombo</option>
+                                <option value="gampaha">Gampaha</option>
+                                <option value="kalutara">Kalutara</option>
+                                <option value="kandy">Kandy</option>
+                                <option value="matale">Matale</option>
+                                <option value="nuwara-eliya">Nuwara Eliya</option>
+                                <option value="galle">Galle</option>
+                                <option value="matara">Matara</option>
+                                <option value="hambantota">Hambantota</option>
+                                <option value="jaffna">Jaffna</option>
+                                <option value="kilinochchi">Kilinochchi</option>
+                                <option value="mannar">Mannar</option>
+                                <option value="vavuniya">Vavuniya</option>
+                                <option value="mullaitivu">Mullaitivu</option>
+                                <option value="batticaloa">Batticaloa</option>
+                                <option value="ampara">Ampara</option>
+                                <option value="trincomalee">Trincomalee</option>
+                                <option value="kurunegala">Kurunegala</option>
+                                <option value="puttalam">Puttalam</option>
+                                <option value="anuradhapura">Anuradhapura</option>
+                                <option value="polonnaruwa">Polonnaruwa</option>
+                                <option value="badulla">Badulla</option>
+                                <option value="monaragala">Monaragala</option>
+                                <option value="ratnapura">Ratnapura</option>
+                                <option value="kegalle">Kegalle</option>
+                            </select>
+                        </div>
+                        <div class="form-group floating-label">
+                            <input type="tel" id="hotel-phone" required>
+                            <label for="hotel-phone">Phone Number</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group floating-label">
+                        <input type="text" id="hotel-address" required>
+                        <label for="hotel-address">Hotel Address</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hotel-description">Hotel Description</label>
+                        <textarea id="hotel-description" placeholder="Tell us about your hotel..." required></textarea>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <div class="custom-checkbox">
+                            <input type="checkbox" id="hotel-terms" required>
+                            <span class="checkmark"></span>
+                        </div>
+                        <label for="hotel-terms">I agree to the Terms of Service and Privacy Policy</label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Create Hotel Account</span>
+                        <div class="loading">
+                            <div class="spinner"></div>
+                        </div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- User Form -->
+            <div id="user" class="form-content">
+                <div class="success-message" id="user-success">
+                    ✅ Registration successful! Check your email for verification.
+                </div>
+
+                <form id="user-form">
+                    <div class="form-row">
+                        <div class="form-group floating-label">
+                            <input type="text" id="user-first-name" required>
+                            <label for="user-first-name">First Name</label>
+                        </div>
+                        <div class="form-group floating-label">
+                            <input type="text" id="user-last-name" required>
+                            <label for="user-last-name">Last Name</label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group floating-label">
+                            <input type="email" id="user-email" required>
+                            <label for="user-email">Email Address</label>
+                        </div>
+                        <div class="form-group floating-label">
+                            <input type="tel" id="user-phone" required>
+                            <label for="user-phone">Phone Number</label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group floating-label">
+                            <input type="password" id="user-password" required>
+                            <label for="user-password">Password</label>
+                        </div>
+                        <div class="form-group floating-label">
+                            <input type="password" id="user-confirm-password" required>
+                            <label for="user-confirm-password">Confirm Password</label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="user-district">Preferred District</label>
+                            <select id="user-district">
+                                <option value="">Select District</option>
+                                <option value="colombo">Colombo</option>
+                                <option value="gampaha">Gampaha</option>
+                                <option value="kalutara">Kalutara</option>
+                                <option value="kandy">Kandy</option>
+                                <option value="matale">Matale</option>
+                                <option value="nuwara-eliya">Nuwara Eliya</option>
+                                <option value="galle">Galle</option>
+                                <option value="matara">Matara</option>
+                                <option value="hambantota">Hambantota</option>
+                                <option value="jaffna">Jaffna</option>
+                                <option value="kilinochchi">Kilinochchi</option>
+                                <option value="mannar">Mannar</option>
+                                <option value="vavuniya">Vavuniya</option>
+                                <option value="mullaitivu">Mullaitivu</option>
+                                <option value="batticaloa">Batticaloa</option>
+                                <option value="ampara">Ampara</option>
+                                <option value="trincomalee">Trincomalee</option>
+                                <option value="kurunegala">Kurunegala</option>
+                                <option value="puttalam">Puttalam</option>
+                                <option value="anuradhapura">Anuradhapura</option>
+                                <option value="polonnaruwa">Polonnaruwa</option>
+                                <option value="badulla">Badulla</option>
+                                <option value="monaragala">Monaragala</option>
+                                <option value="ratnapura">Ratnapura</option>
+                                <option value="kegalle">Kegalle</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="user-purpose">Primary Travel Purpose</label>
+                            <select id="user-purpose">
+                                <option value="">Select Purpose</option>
+                                <option value="leisure">Leisure Travel</option>
+                                <option value="business">Business Travel</option>
+                                <option value="wedding">Wedding Events</option>
+                                <option value="celebration">Celebrations</option>
+                                <option value="conference">Conferences</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <div class="custom-checkbox">
+                            <input type="checkbox" id="user-newsletter">
+                            <span class="checkmark"></span>
+                        </div>
+                        <label for="user-newsletter">Subscribe to our newsletter for special offers</label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <div class="custom-checkbox">
+                            <input type="checkbox" id="user-terms" required>
+                            <span class="checkmark"></span>
+                        </div>
+                        <label for="user-terms">I agree to the Terms of Service and Privacy Policy</label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Create User Account</span>
+                        <div class="loading">
+                            <div class="spinner"></div>
+                        </div>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Create floating particles
+    function createParticles() {
+        const particles = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            particles.appendChild(particle);
+        }
+    }
+
+    // Tab switching functionality
+    function switchTab(tabName) {
+        // Update tab buttons
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        event.target.classList.add('active');
+
+        // Update form content
+        document.querySelectorAll('.form-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById(tabName).classList.add('active');
+    }
+
+    // Form submission with animation
+    function handleFormSubmit(formId, successId) {
+        const form = document.getElementById(formId);
+        const submitBtn = form.querySelector('.submit-btn');
+        const btnText = submitBtn.querySelector('.btn-text');
+        const loading = submitBtn.querySelector('.loading');
+        const successMessage = document.getElementById(successId);
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Show loading animation
+            btnText.style.opacity = '0';
+            loading.classList.add('active');
+            submitBtn.disabled = true;
+
+            // Simulate API call
+            setTimeout(() => {
+                // Hide loading animation
+                loading.classList.remove('active');
+                btnText.style.opacity = '1';
+                submitBtn.disabled = false;
+
+                // Show success message
+                successMessage.classList.add('show');
+
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 5000);
+
+                // Reset form
+                form.reset();
+            }, 2000);
+        });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        createParticles();
+        handleFormSubmit('hotel-form', 'hotel-success');
+        handleFormSubmit('user-form', 'user-success');
+
+        // Add input validation animations
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.value.trim() !== '') {
+                    this.classList.add('has-value');
+                } else {
+                    this.classList.remove('has-value');
+                }
+            });
+        });
+    });
+
+    // Add smooth scrolling for better UX
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - Hotel Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0b0c12 0%, #156017 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgb(255, 255, 255);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: headerPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes headerPulse {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .welcome-section h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .welcome-section p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #42e695, #3b54b8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: #c3ffb0;
+            font-weight: bold;
+        }
+
+        .user-details h3 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .user-details p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: rgb(195, 255, 176);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .search-title {
+            font-size: 1.8em;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-title::before {
+            content: '';
+            width: 4px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 20px;
+            align-items: end;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #c3ffb0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #c3ffb0;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-btn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #c3ffb0;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            padding: 8px 15px;
+            background: #c3ffb0;
+            border: 2px solid #c3ffb0;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-chip:hover {
+            background: #667eea;
+            color: #c3ffb0;
+            border-color: #667eea;
+        }
+
+        .filter-chip.active {
+            background: #667eea;
+            color: #c3ffb0;
+            border-color: #667eea;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgb(195, 255, 176);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #42e695, #3bb2b8);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .stat-number {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        /* Quick Actions */
+        .quick-actions-section {
+            background: rgb(195, 255, 176);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .quick-action-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quick-action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .quick-action-card:hover {
+            background: rgb(195, 255, 176);
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .quick-action-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .quick-action-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .quick-action-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .quick-action-description {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        /* Recent Activity */
+        .recent-activity {
+            background: rgb(195, 255, 176);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .activity-item:hover {
+            background: #c3ffb0;
+            border-left-color: #351059;
+            transform: translateX(5px);
+        }
+
+        .activity-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #42e695, #3bb2b8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c3ffb0;
+            font-size: 1.2em;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .activity-time {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* Floating Search Button */
+        .floating-search {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #aa66e3, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c3ffb0;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .floating-search:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e74c3c;
+            color: #c3ffb0;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .search-filters {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-container {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .welcome-section h1 {
+                font-size: 2em;
+            }
+
+            .quick-actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+    <!-- Header Section -->
+    <div class="header">
+        <div class="header-content">
+            <div class="welcome-section">
+                <h1>Welcome to Sri Lanka Hotels</h1>
+                <p>Discover amazing hotels across beautiful Sri Lanka</p>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">JD</div>
+                <div class="user-details">
+                    <h3>John Doe</h3>
+                    <p>Premium Member</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-section">
+        <div class="search-header">
+            <h2 class="search-title">🔍 Find Your Perfect Hotel</h2>
+        </div>
+        <form class="search-form" onsubmit="searchHotels(event)">
+            <div class="form-group">
+                <label for="destination">Destination</label>
+                <select id="destination" name="destination">
+                    <option value="">Select District</option>
+                    <option value="colombo">Colombo</option>
+                    <option value="kandy">Kandy</option>
+                    <option value="galle">Galle</option>
+                    <option value="nuwara-eliya">Nuwara Eliya</option>
+                    <option value="anuradhapura">Anuradhapura</option>
+                    <option value="polonnaruwa">Polonnaruwa</option>
+                    <option value="matara">Matara</option>
+                    <option value="ratnapura">Ratnapura</option>
+                    <option value="kurunegala">Kurunegala</option>
+                    <option value="badulla">Badulla</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="checkin">Check-in Date</label>
+                <input type="date" id="checkin" name="checkin" required>
+            </div>
+            <div class="form-group">
+                <label for="checkout">Check-out Date</label>
+                <input type="date" id="checkout" name="checkout" required>
+            </div>
+            <div class="form-group">
+                <label for="guests">Guests</label>
+                <select id="guests" name="guests">
+                    <option value="1">1 Guest</option>
+                    <option value="2">2 Guests</option>
+                    <option value="3">3 Guests</option>
+                    <option value="4">4 Guests</option>
+                    <option value="5+">5+ Guests</option>
+                </select>
+            </div>
+            <button type="submit" class="search-btn">
+                🔍 Search Hotels
+            </button>
+        </form>
+
+        <div class="search-filters">
+            <div class="filter-chip" onclick="toggleFilter(this)">
+                <span>🏖️</span> Beach Hotels
+            </div>
+            <div class="filter-chip" onclick="toggleFilter(this)">
+                <span>🏔️</span> Mountain View
+            </div>
+            <div class="filter-chip" onclick="toggleFilter(this)">
+                <span>🏙️</span> City Center
+            </div>
+            <div class="filter-chip" onclick="toggleFilter(this)">
+                <span>🏊</span> Pool & Spa
+            </div>
+            <div class="filter-chip" onclick="toggleFilter(this)">
+                <span>🍽️</span> Restaurant
+            </div>
+            <div class="filter-chip" onclick="toggleFilter(this)">
+                <span>💪</span> Fitness Center
+            </div>
+            <div class="filter-chip" onclick="toggleFilter(this)">
+                <span>🅿️</span> Free Parking
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">🏨</div>
+            <div class="stat-number">1,250+</div>
+            <div class="stat-label">Hotels Available</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-number">4.7</div>
+            <div class="stat-label">Average Rating</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🌍</div>
+            <div class="stat-number">25</div>
+            <div class="stat-label">Districts Covered</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🎁</div>
+            <div class="stat-number">15</div>
+            <div class="stat-label">Special Offers</div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions-section">
+        <h2 class="section-title">⚡ Quick Actions</h2>
+        <div class="quick-actions-grid">
+            <div class="quick-action-card" onclick="quickAction('my-bookings')">
+                <div class="quick-action-icon">📋</div>
+                <div class="quick-action-title">My Bookings</div>
+                <div class="quick-action-description">View and manage your hotel reservations</div>
+            </div>
+            <div class="quick-action-card" onclick="quickAction('favorites')">
+                <div class="quick-action-icon">❤️</div>
+                <div class="quick-action-title">Favorite Hotels</div>
+                <div class="quick-action-description">Access your saved hotels and wishlist</div>
+            </div>
+            <div class="quick-action-card" onclick="quickAction('reviews')">
+                <div class="quick-action-icon">⭐</div>
+                <div class="quick-action-title">Write Reviews</div>
+                <div class="quick-action-description">Share your experience with photos and ratings</div>
+            </div>
+            <div class="quick-action-card" onclick="quickAction('profile')">
+                <div class="quick-action-icon">👤</div>
+                <div class="quick-action-title">My Profile</div>
+                <div class="quick-action-description">Update personal information and preferences</div>
+            </div>
+            <div class="quick-action-card" onclick="quickAction('offers')">
+                <div class="quick-action-icon">🎯</div>
+                <div class="quick-action-title">Special Offers</div>
+                <div class="quick-action-description">Discover exclusive deals and discounts</div>
+            </div>
+            <div class="quick-action-card" onclick="quickAction('support')">
+                <div class="quick-action-icon">💬</div>
+                <div class="quick-action-title">Customer Support</div>
+                <div class="quick-action-description">Get help with bookings and inquiries</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="recent-activity">
+        <h2 class="section-title">📊 Recent Activity</h2>
+        <div class="activity-item">
+            <div class="activity-icon">🏨</div>
+            <div class="activity-content">
+                <div class="activity-title">Booking Confirmed - Ocean Paradise Hotel</div>
+                <div class="activity-time">2 hours ago</div>
+            </div>
+        </div>
+        <div class="activity-item">
+            <div class="activity-icon">⭐</div>
+            <div class="activity-content">
+                <div class="activity-title">Review Submitted - Mountain View Resort</div>
+                <div class="activity-time">1 day ago</div>
+            </div>
+        </div>
+        <div class="activity-item">
+            <div class="activity-icon">🔍</div>
+            <div class="activity-content">
+                <div class="activity-title">Searched Hotels in Kandy</div>
+                <div class="activity-time">3 days ago</div>
+            </div>
+        </div>
+        <div class="activity-item">
+            <div class="activity-icon">❤️</div>
+            <div class="activity-content">
+                <div class="activity-title">Added City Lights Inn to Favorites</div>
+                <div class="activity-time">1 week ago</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Search Button -->
+<div class="floating-search" onclick="scrollToSearch()">
+    <div style="position: relative;">
+        🔍
+        <div class="notification-badge">3</div>
+    </div>
+</div>
+
+<script>
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('checkin').setAttribute('min', today);
+    document.getElementById('checkout').setAttribute('min', today);
+
+    // Update checkout minimum date when checkin changes
+    document.getElementById('checkin').addEventListener('change', function() {
+        const checkinDate = new Date(this.value);
+        const checkoutDate = new Date(checkinDate);
+        checkoutDate.setDate(checkoutDate.getDate() + 1);
+        document.getElementById('checkout').setAttribute('min', checkoutDate.toISOString().split('T')[0]);
+    });
+
+    // Search functionality
+    function searchHotels(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const searchData = Object.fromEntries(formData);
+
+        showNotification(`Searching hotels in ${searchData.destination || 'all districts'}...`);
+
+        // Simulate search results
+        setTimeout(() => {
+            showNotification('Found 25 hotels matching your criteria!');
+        }, 2000);
+    }
+
+    // Filter toggle functionality
+    function toggleFilter(element) {
+        element.classList.toggle('active');
+        const filterName = element.textContent.trim();
+
+        if (element.classList.contains('active')) {
+            showNotification(`Filter applied: ${filterName}`);
+        } else {
+            showNotification(`Filter removed: ${filterName}`);
+        }
+    }
+
+    // Quick action functionality
+    function quickAction(action) {
+        const actions = {
+            'my-bookings': 'Opening your bookings...',
+            'favorites': 'Loading favorite hotels...',
+            'reviews': 'Opening review section...',
+            'profile': 'Accessing your profile...',
+            'offers': 'Fetching special offers...',
+            'support': 'Connecting to customer support...'
+        };
+
+        showNotification(actions[action] || 'Processing your request...');
+    }
+
+    // Scroll to search section
+    function scrollToSearch() {
+        document.querySelector('.search-section').scrollIntoView({
+            behavior: 'smooth'
+        });
+    }
+
+    // Notification system
+    function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #42e695, #3bb2b8);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 8px 25px rgba(66, 230, 149, 0.3);
+                z-index: 10000;
+                font-weight: bold;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                max-width: 300px;
+            `;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+        }, 100);
+
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 3000);
+    }
+
+    // Add loading animation to search button
+    document.querySelector('.search-btn').addEventListener('click', function(e) {
+        if (e.target.tagName === 'BUTTON') {
+            const button = e.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '🔄 Searching...';
+            button.disabled = true;
+
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 2000);
+        }
+    });
+
+    // Animate cards on scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    });
+
+    document.querySelectorAll('.stat-card, .quick-action-card').forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'all 0.6s ease';
+        observer.observe(card);
+    });
+
+    // Add ripple effect to buttons
+    document.querySelectorAll('.search-btn, .quick-action-card').forEach(element => {
+        element.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+
+            ripple.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    background: rgba(255, 255, 255, 0.3);
+                    border-radius: 50%;
+                    transform: scale(0);
+                    animation: ripple 0.6s ease-out;
+                    pointer-events: none;
+                `;
+
+            this.style.position = 'relative';
+            this.style.overflow = 'hidden';
+            this.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+
+    // Add CSS animation for ripple effect
+    const style = document.createElement('style');
+    style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+    document.head.appendChild(style);
+</script>
+</body>
+</html>
